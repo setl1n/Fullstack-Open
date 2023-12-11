@@ -4,8 +4,7 @@ sequenceDiagram
     participant server
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
-    Note left of server: Server instructs btroser to reload with a 'redirect'
-    Note right of browser: The browser reloads page
+    Note right of browser: The browser reloads page as per default of submit event
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
