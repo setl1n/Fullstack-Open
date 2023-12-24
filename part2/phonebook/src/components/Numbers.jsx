@@ -1,26 +1,29 @@
-const Numbers = ({ persons, filter }) => {
-    let filteredList
-    if (filter == '') {
-      filteredList = persons.map((person) => (
-        <li key={person.id}>{person.name} {person.number}</li>
-      ))
-    } else {
-      // Filters the list of contacts first
-      let filteredPersons = persons.filter((person) => (
-        person.name.toLowerCase().includes(filter.toLowerCase())
-      ))
-      // Converts array of filtered people to ul elements
-      filteredList = filteredPersons.map((person) => (
-        <li key={person.id}>{person.name} {person.number}</li>
-      ))
-    }
-    return (
-      <>
-        <ul style={{ listStyleType: 'none' }}>
-          {filteredList}
-        </ul>
-      </>
-    )
-  }
+const Person = ({ person, deletePhoneNumber }) => {
+  return (
+    <>
+      {person.name} {person.number} <button onClick={deletePhoneNumber}>delete</button>
+    </>
+  )
+}
+
+const Numbers = ({ persons, filter, deletePhoneNumber }) => {
+  let filteredList = filter ?
+    persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) : persons
+
+  return (
+    <>
+      <ul style={{ listStyleType: 'none' }}>
+        {filteredList.map(person => (
+          <li key={person.id}>
+            <Person
+              person={person}
+              deletePhoneNumber={() => deletePhoneNumber(person.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
 
 export default Numbers
