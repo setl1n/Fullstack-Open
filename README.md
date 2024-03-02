@@ -1,3 +1,6 @@
-Submissions for FullStack Open Course
+**Submissions for FullStack Open Course**
 
-Course at: https://fullstackopen.com/en/
+Course Description:
+Learn React, Redux, Node.js, MongoDB, GraphQL and TypeScript in one go! This course will introduce you to modern JavaScript-based web development. The main focus is on building single page applications with ReactJS that use REST APIs built with Node.js.
+
+Full Course at: https://fullstackopen.com/en/
