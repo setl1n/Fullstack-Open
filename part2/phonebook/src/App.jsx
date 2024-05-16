@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
+import Notificaiton from './components/Notification'
 import contactsServices from './services/contacts'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [successNotiMessage, setNotiMessage] = useState(null)
 
   useEffect(() => {
     contactsServices
@@ -33,6 +35,13 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const displayShortNotification = (newName) => {
+    setNotiMessage(`Added ${newName}`)
+    setTimeout(() => {
+      setNotiMessage(null)
+    }, 2500)
+  }
+
   const addPhoneNumber = (event) => {
     event.preventDefault()
     const newContact = {
@@ -48,20 +57,23 @@ const App = () => {
           .replace(existingPerson.id, newContact)
           .then(replacedContact => {
             setPersons(persons.map(p => p.name === replacedContact.name ? replacedContact : p))
+            displayShortNotification(replacedContact.name)
           })
         setNewName('')
         setNewNumber('')
       }
-      // adds if person's name is not in the phonebook
+    // adds if person's name is not in the phonebook
     } else {
       contactsServices
         .add(newContact)
         .then(returnedContact => {
           setPersons(persons.concat(returnedContact))
+          displayShortNotification(returnedContact.name)
           setNewName('')
           setNewNumber('')
         })
     }
+    
   }
 
   const deletePhoneNumber = id => {
@@ -79,6 +91,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notificaiton message={successNotiMessage}/>
       <Filter
         filter={filter}
         handleFilterChange={handleFilterChange}
