@@ -51,7 +51,7 @@ const App = () => {
   const displayShortErrorMessage = (name) => {
     setErrorMessage(`Information of ${newName} has already been removed from the server`)
     setTimeout(() => {
-      setNotiMessage(null)
+      setErrorMessage(null)
     }, 2500)
   }
 
