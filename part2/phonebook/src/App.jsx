@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
 import Notificaiton from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 import contactsServices from './services/contacts'
 
 const App = () => {
@@ -11,13 +12,18 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [successNotiMessage, setNotiMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
-  useEffect(() => {
+  const reloadPersons = (() => {
     contactsServices
       .getAll()
       .then(response => {
         setPersons(response)
       })
+  })
+
+  useEffect(() => {
+    reloadPersons();
   }, [])
 
   const handleNameChange = (event) => {
@@ -42,6 +48,13 @@ const App = () => {
     }, 2500)
   }
 
+  const displayShortErrorMessage = (name) => {
+    setErrorMessage(`Information of ${newName} has already been removed from the server`)
+    setTimeout(() => {
+      setNotiMessage(null)
+    }, 2500)
+  }
+
   const addPhoneNumber = (event) => {
     event.preventDefault()
     const newContact = {
@@ -58,11 +71,20 @@ const App = () => {
           .then(replacedContact => {
             setPersons(persons.map(p => p.name === replacedContact.name ? replacedContact : p))
             displayShortNotification(replacedContact.name)
+            setNewName('')
+            setNewNumber('')
           })
-        setNewName('')
-        setNewNumber('')
+          .catch(error => {
+            console.log("caugt error:\n", error)
+            if (error.response.status == 404) {
+              displayShortErrorMessage(newName)
+              reloadPersons()
+            } else {
+              console.log("unhandled error caught")
+            }
+          })
       }
-    // adds if person's name is not in the phonebook
+      // adds if person's name is not in the phonebook
     } else {
       contactsServices
         .add(newContact)
@@ -73,7 +95,6 @@ const App = () => {
           setNewNumber('')
         })
     }
-    
   }
 
   const deletePhoneNumber = id => {
@@ -91,7 +112,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notificaiton message={successNotiMessage}/>
+      <Notificaiton message={successNotiMessage} />
+      <ErrorMessage message={errorMessage} />
       <Filter
         filter={filter}
         handleFilterChange={handleFilterChange}
