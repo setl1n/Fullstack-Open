@@ -3,6 +3,7 @@ import countryInfoServices from './services/restcountryapi'
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('')
+  const [countriesToShow, setCountriesToShow] = useState([])
   const [countries, setCountries] = useState([])
 
   useEffect(() => {
@@ -22,21 +23,24 @@ const App = () => {
 
     let queryResults = countries.filter(countryName => countryName.includes(newSearchQuery));
     console.log("countries that match with new query: ", queryResults);
-    setCountries(queryResults);
+    setCountriesToShow(queryResults);
   })
 
-  return (  
+  return (
     <div>
       <form>
         find countries
         <input value={searchQuery} onChange={handleQueryChange} />
       </form>
-      <h1>Country Names</h1>
-      <ul>
-        {countries.map((name, index) => (
-          <li key={index}>{name}</li>
-        ))}
-      </ul>
+      <div>
+        {(() => {
+          if (countriesToShow.length > 10) {
+            return <div>Too many matches, specify another filter</div>
+          } else {
+            return countriesToShow.map((country, index) => <div key={index}>{country}</div>);
+          }
+        })()}
+      </div>
     </div>
   )
 }
