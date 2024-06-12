@@ -6,11 +6,11 @@ const App = () => {
   const [countries, setCountries] = useState([])
 
   useEffect(() => {
-    console.log("getting list of countries from server");
+    console.log("getting list of countries from local json server");
 
     let fetchCountryList = async () => {
-      let countryList = await countryInfoServices.getAll();
-      console.log("processed country list from api:", countryList);
+      let countryList = await countryInfoServices.getCountryList();
+      console.log("processed country list from local json server:", countryList);
       setCountries(countryList);
     }
     fetchCountryList();
