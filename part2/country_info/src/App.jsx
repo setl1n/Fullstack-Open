@@ -17,10 +17,15 @@ const App = () => {
   }, [])
 
   const handleQueryChange = ((event) => {
-    setSearchQuery(event.target.value)
+    let newSearchQuery = event.target.value;
+    setSearchQuery(newSearchQuery);
+
+    let queryResults = countries.filter(countryName => countryName.includes(newSearchQuery));
+    console.log("countries that match with new query: ", queryResults);
+    setCountries(queryResults);
   })
 
-  return (
+  return (  
     <div>
       <form>
         find countries
@@ -28,7 +33,7 @@ const App = () => {
       </form>
       <h1>Country Names</h1>
       <ul>
-        {countries.map((name,index) => (
+        {countries.map((name, index) => (
           <li key={index}>{name}</li>
         ))}
       </ul>
