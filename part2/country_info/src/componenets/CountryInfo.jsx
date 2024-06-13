@@ -1,5 +1,25 @@
 import { useState, useEffect } from 'react'
 import restcountryapi from '../services/restcountryapi';
+import weatherapi from '../services/weatherapi';
+
+const WeatherInfo = (({ lat, lng}) => {
+    const [weatherInfo, setWeatherInfo] = useState(null);
+    
+    useEffect(() => {
+        let getWeatherInfo = (async (lat, lng) => {
+            let weatherInfoFromAPI = await weatherapi.getWeatherInfo(lat, lng);
+            console.log("weather info from api: ", weatherInfoFromAPI);
+            setWeatherInfo(weatherInfoFromAPI);
+        })
+        getWeatherInfo(lat, lng);
+    }, []);
+
+    if (!weatherInfo) {
+        return <></>;
+    }
+
+    return <>weather info acquired!</>
+})
 
 const SpecificCountryInfo = (({ countryName }) => {
     const [countryInfo, setCountryInfo] = useState(null);
@@ -7,7 +27,7 @@ const SpecificCountryInfo = (({ countryName }) => {
     useEffect(() => {
         let fetchCountryInfo = (async (countryName) => {
             let countryInfoFromAPI = await restcountryapi.getCountryInfo(countryName);
-            console.log("country info froun api: ", countryInfoFromAPI);
+            console.log("country info from api: ", countryInfoFromAPI);
             setCountryInfo(countryInfoFromAPI);
         })
 
@@ -24,6 +44,7 @@ const SpecificCountryInfo = (({ countryName }) => {
         <h2>languages:</h2>
         <ul>{Object.values(countryInfo.languages).map((language, index) => <li key={index}>{language}</li>)}</ul>
         <img src={countryInfo.flags.png} alt="Picture of Flag"></img>
+        < WeatherInfo lat={countryInfo.latlng[0]} lng={countryInfo.latlng[1]}/>
     </>;
 })
 
