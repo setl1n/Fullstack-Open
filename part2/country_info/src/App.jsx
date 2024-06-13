@@ -30,6 +30,10 @@ const App = () => {
     setCountriesToShow(queryResults);
   })
 
+  const showSpecificCountry = ((countryToShow) => {
+    setSearchQuery(countryToShow);
+    setCountriesToShow([countryToShow]);
+  })
 
   return (
     <div>
@@ -37,9 +41,9 @@ const App = () => {
         find countries
         <input value={searchQuery} onChange={handleQueryChange} />
       </form>
-      <CountryInfo countriesToShow={countriesToShow} />
+      <CountryInfo countriesToShow={countriesToShow} showSpecificCountry={showSpecificCountry} />
     </div>
   )
 }
 
-export default App
+export default App 

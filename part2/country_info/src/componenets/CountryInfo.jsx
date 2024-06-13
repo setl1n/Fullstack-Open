@@ -18,20 +18,29 @@ const SpecificCountryInfo = (({ countryName }) => {
     }
 
     return <>
-    <h1>{countryInfo.name.common}</h1>
+        <h1>{countryInfo.name.common}</h1>
         <div>capital {countryInfo.capital[0]}</div>
         <div>area {countryInfo.area}</div>
-    <h2>languages:</h2>
-        <ul>{Object.values(countryInfo.languages).map((language,index) => <li key={index}>{language}</li>)}</ul>
-    <img src={countryInfo.flags.png} alt="Picture of Flag"></img>
+        <h2>languages:</h2>
+        <ul>{Object.values(countryInfo.languages).map((language, index) => <li key={index}>{language}</li>)}</ul>
+        <img src={countryInfo.flags.png} alt="Picture of Flag"></img>
     </>;
 })
 
-const CountryInfo = (({ countriesToShow }) => {
+const CountriesList = (({ countriesToShow, showSpecificCountry}) => {
+    let countriesList = countriesToShow.map((country, index) => {
+        return <div key={index}>{country}
+            <button onClick={() => showSpecificCountry(country)}>show</button>
+        </div>;
+    });
+    return countriesList;
+})
+
+const CountryInfo = (({ countriesToShow, showSpecificCountry }) => {
     if (countriesToShow.length === 1) {
         return <SpecificCountryInfo countryName={countriesToShow[0]} />;
     } else if (countriesToShow.length <= 10) {
-        return (() => countriesToShow.map((country, index) => <div key={index}>{country}</div>))();
+        return <CountriesList countriesToShow={countriesToShow} showSpecificCountry={showSpecificCountry}/>;
     } else {
         return <>
             Too many matches, specify another filter
