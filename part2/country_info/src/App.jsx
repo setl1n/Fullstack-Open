@@ -23,9 +23,16 @@ const App = () => {
 
     // clean up code please
     let queryResults = countries.filter(country => country.find(name => name.toLowerCase().includes(newSearchQuery.toLowerCase())))
-                                .map(foundCountry => foundCountry[0]);
+      .map(foundCountry => foundCountry[0]);
     console.log("countries that match with new query: ", queryResults);
-    setCountriesToShow(queryResults);
+    
+    if (queryResults.length === 1) {
+      setCountriesToShow(["only 1 found!"]);
+    } else if (queryResults.length <= 10) {
+      setCountriesToShow(queryResults);
+    } else {
+      setCountriesToShow(["Too many matches, specify another filter"]);
+    }
   })
 
   return (
@@ -35,13 +42,7 @@ const App = () => {
         <input value={searchQuery} onChange={handleQueryChange} />
       </form>
       <div>
-        {(() => {
-          if (countriesToShow.length > 10) {
-            return <div>Too many matches, specify another filter</div>
-          } else {
-            return countriesToShow.map((country, index) => <div key={index}>{country}</div>);
-          }
-        })()}
+        {(() => countriesToShow.map((country, index) => <div key={index}>{country}</div>))()}
       </div>
     </div>
   )
