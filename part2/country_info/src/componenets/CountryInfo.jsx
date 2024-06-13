@@ -16,7 +16,15 @@ const SpecificCountryInfo = (({ countryName }) => {
     if (!countryInfo) {
         return <>Loading...</>;
     }
-    return <>{countryInfo.name.common}</>;
+
+    return <>
+    <h1>{countryInfo.name.common}</h1>
+        <div>capital {countryInfo.capital[0]}</div>
+        <div>area {countryInfo.area}</div>
+    <h2>languages:</h2>
+        <ul>{Object.values(countryInfo.languages).map((language,index) => <li key={index}>{language}</li>)}</ul>
+    <img src={countryInfo.flags.png} alt="Picture of Flag"></img>
+    </>;
 })
 
 const CountryInfo = (({ countriesToShow }) => {
