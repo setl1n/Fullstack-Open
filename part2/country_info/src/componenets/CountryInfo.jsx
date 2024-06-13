@@ -50,7 +50,7 @@ const SpecificCountryInfo = (({ countryName }) => {
 
 const CountriesList = (({ countriesToShow, showSpecificCountry}) => {
     let countriesList = countriesToShow.map((country, index) => {
-        return <div key={index}>{country}
+        return <div key={index}>{country[1]} ({country[0]})
             <button onClick={() => showSpecificCountry(country)}>show</button>
         </div>;
     });
@@ -59,7 +59,8 @@ const CountriesList = (({ countriesToShow, showSpecificCountry}) => {
 
 const CountryInfo = (({ countriesToShow, showSpecificCountry }) => {
     if (countriesToShow.length === 1) {
-        return <SpecificCountryInfo countryName={countriesToShow[0]} />;
+        console.log(countriesToShow);
+        return <SpecificCountryInfo countryName={countriesToShow[0][0]} />;
     } else if (countriesToShow.length <= 10) {
         return <CountriesList countriesToShow={countriesToShow} showSpecificCountry={showSpecificCountry}/>;
     } else {
