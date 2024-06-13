@@ -21,7 +21,9 @@ const App = () => {
     let newSearchQuery = event.target.value;
     setSearchQuery(newSearchQuery);
 
-    let queryResults = countries.filter(countryName => countryName.includes(newSearchQuery));
+    // clean up code please
+    let queryResults = countries.filter(country => country.find(name => name.toLowerCase().includes(newSearchQuery.toLowerCase())))
+                                .map(foundCountry => foundCountry[0]);
     console.log("countries that match with new query: ", queryResults);
     setCountriesToShow(queryResults);
   })

@@ -8,7 +8,7 @@ const getCountryList = async () => {
     try {
         let response = await axios.get(localhostURL);
         let countriesData = response.data;
-        const countryNames = countriesData.flatMap(country => [country.name.common, country.name.official]);
+        const countryNames = countriesData.map(country => [country.name.common,country.name.official]);
         return countryNames;
     } catch (error) {
         console.log("error fetching countries from api: ", error);
