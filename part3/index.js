@@ -39,3 +39,14 @@ app.get('/info', (req, res) => {
     `
     res.send(info)
 })
+
+app.get('/api/person/:id', (req, res) => {
+    const id = Number(req.params.id);
+    console.log("finding person with matching id");
+    let person = persons.find((person) => person.id === id);
+    console.log("person found: ", person);
+    if (!person) {
+        return res.status(404).end();
+    }
+    res.json(person);
+})
