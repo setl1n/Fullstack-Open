@@ -30,3 +30,12 @@ app.listen(port);
 app.get('/api/persons', (req, res) => {
     res.json(persons);
 })
+
+app.get('/info', (req, res) => {
+    const timestamp = new Date().toString();
+    let info = `
+    <p>Phonebook has info for ${persons.length} people</p>
+    <p>${timestamp}</p>
+    `
+    res.send(info)
+})
