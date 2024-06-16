@@ -1,4 +1,6 @@
 const express = require('express')
+const app = express();
+app.use(express.json())
 
 let persons = [
     {
@@ -22,7 +24,6 @@ let persons = [
         "id": 4
     }
 ]
-const app = express();
 
 const port = 3001
 app.listen(port);
@@ -49,4 +50,28 @@ app.get('/api/person/:id', (req, res) => {
         return res.status(404).end();
     }
     res.json(person);
+})
+
+app.delete('/api/person/:id', (req, res) => {
+    const id = Number(req.params.id);
+    console.log("deleting person with id ", id);
+    persons = persons.filter((person) => person.id !== id);
+    console.log("new persons list: ", persons);
+    res.status(204).send();
+})
+
+app.post('/api/persons', (req, res) => {
+    let newPersonToAdd = req.body;
+    if (!newPersonToAdd.name || !newPersonToAdd.number) {
+        return res.status(400).send({ error: "missing name or number" });
+    }
+    if (persons.find((person) => person.name === newPersonToAdd.name)) {
+        return res.status(400).send({ error: "name must be unique" });
+    }
+    let newID = Math.floor(Math.random() * 99999);
+    newPersonToAdd["id"] = newID;
+    console.log("new person add: ",newPersonToAdd )
+    persons = persons.concat(newPersonToAdd);
+    console.log("persons list after adding: ", persons);
+    res.status(200).end();
 })
