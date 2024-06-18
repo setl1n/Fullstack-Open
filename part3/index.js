@@ -1,22 +1,26 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
+
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 app.use(morgan(function (tokens, req, res) {
     let ret = [
-      tokens.method(req, res),
-      tokens.url(req, res),
-      tokens.status(req, res),
-      tokens.res(req, res, 'content-length'), '-',
-      tokens['response-time'](req, res), 'ms'
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms'
     ]
     if (req.method === 'POST') {
         console.log(req.body);
         ret.push(...[JSON.stringify(req.body)]);
     }
     return ret.join(' ');
-  }));
+}));
+
+app.use(cors());
 
 let persons = [
     {
@@ -42,7 +46,9 @@ let persons = [
 ]
 
 const port = 3001
-app.listen(port);
+app.listen(port, () => {
+    console.log("server is running on port: ", port);
+});
 
 app.get('/api/persons', (req, res) => {
     res.json(persons);
@@ -86,7 +92,7 @@ app.post('/api/persons', (req, res) => {
     }
     let newID = Math.floor(Math.random() * 99999);
     newPersonToAdd["id"] = newID;
-    console.log("new person add: ",newPersonToAdd )
+    console.log("new person add: ", newPersonToAdd)
     persons = persons.concat(newPersonToAdd);
     console.log("persons list after adding: ", persons);
     res.status(200);
