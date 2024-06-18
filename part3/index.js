@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use(morgan(function (tokens, req, res) {
     let ret = [
@@ -20,7 +21,10 @@ app.use(morgan(function (tokens, req, res) {
     return ret.join(' ');
 }));
 
-app.use(cors());
+const port = process.env.PORT || 3001
+app.listen(port, () => {
+    console.log("server is running on port: ", port);
+});
 
 let persons = [
     {
@@ -45,10 +49,6 @@ let persons = [
     }
 ]
 
-const port = 3001
-app.listen(port, () => {
-    console.log("server is running on port: ", port);
-});
 
 app.get('/api/persons', (req, res) => {
     res.json(persons);
