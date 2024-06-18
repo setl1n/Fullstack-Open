@@ -9,28 +9,33 @@ const password = process.argv[2];
 
 const url = `mongodb+srv://kaungsetlin2008:${password}@fullstack-open.fzdq32a.mongodb.net/persons?retryWrites=true&w=majority&appName=fullstack-open`;
 
-const addPersons = async (persons) => {
-    for (let person of persons) {
-        console.log("iterating through \"persons\" array: ", person);
-        let newPerson = new Person({
-            name: person.name,
-            number: person.number,
-            id: person.id
-        })
-        await newPerson.save();
-        console.log("added: ", person);
-    }
+const printDatabase = () => {
+    console.log("phonebook:");
+    Person.find({}).then(result => {
+        result.forEach(person => console.log(person.name, person.number));
+        mongoose.connection.close();
+    })
 }
 
-mongoose.set('strictQuery',false)
+const saveToDataBase = ((name, number) => {
+    const newPerson = new Person({ name, number });
+    newPerson.save().then(() => {
+        console.log(newPerson, "saved successfully");
+        mongoose.connection.close();
+    });
+})
+
+mongoose.set('strictQuery', false)
 
 mongoose.connect(url)
-    .then(async () => {
-        mongoose.set()
+    .then(() => {
         console.log("connected!");
         if (process.argv.length === 3) {
-            console.log("im here!");
-            await addPersons(persons);
+            printDatabase();
+        } else if (process.argv.length === 5) {
+            saveToDataBase(process.argv[3], process.argv[4]);
+        } else {
+            console.log("unrecognised number of arguments");
             mongoose.connection.close();
         }
     })
@@ -41,31 +46,7 @@ mongoose.connect(url)
 
 const personSchema = new mongoose.Schema({
     name: String,
-    number: String,
-    id: Number
+    number: String
 });
 
 const Person = mongoose.model('Person', personSchema);
-
-const persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-    },
-    {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-    }
-]
