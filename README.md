@@ -12,4 +12,4 @@ How to run Web App locally:
 - Run "npx run server" to run a json-server locally with data at db.json
 
 Render deployment (part 3):
-https://render-deployment-a47i.onrender.com
+https://fullstack-open-bv7i.onrender.com/
