@@ -45,7 +45,7 @@ const personSchema = new mongoose.Schema({
     id: Number
 });
 
-const Person = mongoose.model('User', personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 const persons = [
     {
