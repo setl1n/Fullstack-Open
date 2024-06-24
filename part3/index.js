@@ -1,12 +1,15 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/Person')
+
+const port = process.env.PORT
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static('dist'));
-
 app.use(morgan(function (tokens, req, res) {
     let ret = [
         tokens.method(req, res),
@@ -22,37 +25,15 @@ app.use(morgan(function (tokens, req, res) {
     return ret.join(' ');
 }));
 
-const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log("server is running on port: ", port);
 });
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        "id": 2
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 3
-    },
-    {
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122",
-        "id": 4
-    }
-]
-
-
 app.get('/api/persons', (req, res) => {
-    res.json(persons);
+    Person.find({}).then((persons) => {
+        console.log(JSON.stringify(persons));
+        res.json(persons);
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -84,18 +65,17 @@ app.delete('/api/person/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-    let newPersonToAdd = JSON.parse(JSON.stringify(req.body));
-    if (!newPersonToAdd.name || !newPersonToAdd.number) {
+    let newPersonJSON = req.body;
+    if (!newPersonJSON.name || !newPersonJSON.number) {
         return res.status(400).send({ error: "missing name or number" });
     }
-    if (persons.find((person) => person.name === newPersonToAdd.name)) {
-        return res.status(400).send({ error: "name must be unique" });
-    }
-    let newID = Math.floor(Math.random() * 99999);
-    newPersonToAdd["id"] = newID;
-    console.log("new person add: ", newPersonToAdd)
-    persons = persons.concat(newPersonToAdd);
-    console.log("persons list after adding: ", persons);
-    res.status(200);
-    res.send("person added successfully");
+    // if (persons.find((person) => person.name === newPersonToAdd.name)) {
+    //     return res.status(400).send({ error: "name must be unique" });
+    // }
+    let name = newPersonJSON.name.toString();
+    let number = newPersonJSON.number.toString();
+    let newPersonToAdd = new Person({ name , number })
+    newPersonToAdd.save().then((savedPerson) => {
+        res.json(savedPerson);
+    });
 })
