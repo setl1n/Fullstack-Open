@@ -66,6 +66,20 @@ app.delete('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error));
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+    console.log("replacing person of id: ", req.params.id);
+    console.log("with: ", JSON.stringify(req.body, null, 2));
+    const newPerson = {
+        name: req.body.name,
+        number: req.body.number
+    }
+    Person.findByIdAndUpdate(req.params.id, newPerson, { new: true })
+            .then(updatedNote => {
+                res.json(updatedNote);
+            })
+            .catch(error => next(error));
+})
+
 app.post('/api/persons', (req, res) => {
     let newPersonJSON = req.body;
     if (!newPersonJSON.name || !newPersonJSON.number) {
