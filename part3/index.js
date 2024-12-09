@@ -45,7 +45,7 @@ app.get('/info', (req, res) => {
     res.send(info)
 })
 
-app.get('/api/person/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
     console.log("finding person with matching id");
     let person = persons.find((person) => person.id === id);
@@ -56,8 +56,8 @@ app.get('/api/person/:id', (req, res) => {
     res.json(person);
 })
 
-app.delete('/api/person/:id', (req, res) => {
-    const id = Number(req.params.id);
+app.delete('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id;
     console.log("deleting person with id ", id);
     Person.findByIdAndDelete(id)
         .then(result => {
