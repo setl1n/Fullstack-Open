@@ -51,15 +51,15 @@ app.get('/info', (req, res, next) => {
 
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    console.log("finding person with matching id");
-    let person = persons.find((person) => person.id === id);
-    console.log("person found: ", person);
-    if (!person) {
-        return res.status(404).end();
-    }
-    res.json(person);
+app.get('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id;
+    console.log("finding person with matching id: ", id);
+    Person.findById(id)
+        .then(foundPerson => {
+            console.log("person found: ", foundPerson);
+            res.json(foundPerson);
+        })
+        .catch(error => next(error));
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
