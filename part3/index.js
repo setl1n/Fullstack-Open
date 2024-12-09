@@ -80,10 +80,10 @@ app.put('/api/persons/:id', (req, res, next) => {
         number: req.body.number
     }
     Person.findByIdAndUpdate(req.params.id, newPerson, { new: true })
-            .then(updatedNote => {
-                res.json(updatedNote);
-            })
-            .catch(error => next(error));
+        .then(updatedNote => {
+            res.json(updatedNote);
+        })
+        .catch(error => next(error));
 })
 
 app.post('/api/persons', (req, res) => {
@@ -96,7 +96,7 @@ app.post('/api/persons', (req, res) => {
     // }
     let name = newPersonJSON.name.toString();
     let number = newPersonJSON.number.toString();
-    let newPersonToAdd = new Person({ name , number })
+    let newPersonToAdd = new Person({ name, number })
     newPersonToAdd.save().then((savedPerson) => {
         res.json(savedPerson);
     });
@@ -106,7 +106,7 @@ const errorHandler = (err, req, res, next) => {
     console.log(err);
 
     if (err.name == "CastError") {
-        return res.status(400).send({error: "malformatted id"});
+        return res.status(400).send({ error: "malformatted id" });
     }
     next(err)
 }
@@ -114,7 +114,7 @@ const errorHandler = (err, req, res, next) => {
 app.use(errorHandler);
 
 const unknownEndpoint = (req, res) => {
-    res.status(404).send({ error: "unknown endpoint"});
+    res.status(404).send({ error: "unknown endpoint" });
 }
 
 app.use(unknownEndpoint);
