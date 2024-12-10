@@ -110,7 +110,7 @@ const errorHandler = (err, req, res, next) => {
     if (err.name == "CastError") {
         return res.status(400).send({ error: "malformatted id" });
     } else if (err.name == "ValidationError") {
-        return res.status(400).send(err.message);
+        return res.status(400).send({ error: err.message });
     } else {
         return res.status(500).send({ error: "something went wrong"});
     }

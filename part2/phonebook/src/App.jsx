@@ -94,6 +94,16 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          console.log("caught error: ", error);
+          console.log("object type of error: ", typeof(error))
+          if (error.status == 400) {
+            setErrorMessage(error.response.data.error)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 2500)
+          }
+        })
     }
   }
 
