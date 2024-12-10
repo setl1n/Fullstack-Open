@@ -111,6 +111,37 @@ describe('when there are blogs saved', () => {
       assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
     })
   })
+
+  describe('deleting a blog', () => {
+    test('(valid) reduces length of bloglist by 1', async () => {
+      let idToDelete = '5a422a851b54a676234d17f7'
+      await api.delete(`/api/blogs/${idToDelete}`)
+        .expect(204)
+
+      const blogListAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length - 1)
+    })
+
+    test('that does not exist, does not change length of bloglist', async () => {
+      // id does not exist
+      let idToDelete = '5a422a851b54a676234d17f8'
+      await api.delete(`/api/blogs/${idToDelete}`)
+        .expect(204)
+
+      const blogListAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+    })
+
+    test('with invalid id returns 400', async () => {
+      // id does not exist
+      let idToDelete = 'invalid id'
+      await api.delete(`/api/blogs/${idToDelete}`)
+        .expect(400)
+
+      const blogListAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+    })
+  })
 })
 
 after(async () => {
