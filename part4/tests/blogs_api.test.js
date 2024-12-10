@@ -33,6 +33,30 @@ test('unique identifier is id', async () => {
   assert.equal(res.body[0].id, helper.initialBlogs[0]._id)
 })
 
+test('posting a valid blog adds to database', async () => {
+  let newBlog =
+  {
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 2,
+  }
+
+  const res = await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  // check same length
+  const blogsAfterAdding = await helper.blogsInDb()
+  assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+
+  // check content is correct
+  assert.strictEqual(res.body.title, newBlog.title)
+  assert.strictEqual(res.body.author, newBlog.author)
+  assert.strictEqual(res.body.url, newBlog.url)
+  assert.strictEqual(res.body.likes, newBlog.likes)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
