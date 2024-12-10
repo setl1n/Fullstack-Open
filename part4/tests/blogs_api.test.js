@@ -81,6 +81,30 @@ test('posting new blog without "likes" defaults "likes" to 0', async () => {
   assert.strictEqual(res.body.likes, 0)
 })
 
+test.only('posting new blog with empty title returns 400 bad request', async () => {
+  let newBlog =
+  {
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 2,
+  }
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test('posting new blog with empty url returns 400 bad request', async () => {
+  let newBlog =
+  {
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    likes: 2,
+  }
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
