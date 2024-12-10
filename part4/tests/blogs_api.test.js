@@ -1,4 +1,4 @@
-const { test, after , beforeEach } = require('node:test')
+const { test, after , beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
@@ -14,27 +14,27 @@ beforeEach(async () => {
     let newBlog = new Blog(blog)
     await newBlog.save()
   }
-  console.log('all blogs from test file loaded onto mongoDB')
 })
 
-test('notes are returned as json', async () => {
-  const res = await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-  assert.equal(res.body.length, helper.initialBlogs.length)
-})
+describe('when there are blogs saved', () => {
+  test('blogs are returned as json', async () => {
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    assert.equal(res.body.length, helper.initialBlogs.length)
+  })
 
-test('unique identifier is id', async () => {
-  const res = await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-  assert.equal(res.body[0].id, helper.initialBlogs[0]._id)
-})
-
-test('posting a valid blog adds to database', async () => {
-  let newBlog =
+  test('unique identifier is id', async () => {
+    const res = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    assert.equal(res.body[0].id, helper.initialBlogs[0]._id)
+  })
+  describe('posting a new blog', () => {
+    test('(valid) adds to database', async () => {
+      let newBlog =
   {
     title: 'Type wars',
     author: 'Robert C. Martin',
@@ -42,73 +42,75 @@ test('posting a valid blog adds to database', async () => {
     likes: 2,
   }
 
-  const res = await api.post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
-  // check same length
-  const blogsAfterAdding = await helper.blogsInDb()
-  assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+      const res = await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+      // check same length
+      const blogsAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
 
-  // check content is correct
-  assert.strictEqual(res.body.title, newBlog.title)
-  assert.strictEqual(res.body.author, newBlog.author)
-  assert.strictEqual(res.body.url, newBlog.url)
-  assert.strictEqual(res.body.likes, newBlog.likes)
-})
+      // check content is correct
+      assert.strictEqual(res.body.title, newBlog.title)
+      assert.strictEqual(res.body.author, newBlog.author)
+      assert.strictEqual(res.body.url, newBlog.url)
+      assert.strictEqual(res.body.likes, newBlog.likes)
+    })
 
-test('posting new blog without "likes" defaults "likes" to 0', async () => {
-  let newBlog =
+    test(' without "likes" defaults "likes" to 0', async () => {
+      let newBlog =
   {
     title: 'Type wars',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
   }
 
-  const res = await api.post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+      const res = await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
 
-  // check same length
-  const blogsAfterAdding = await helper.blogsInDb()
-  assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+      // check same length
+      const blogsAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
 
-  // check content is correct
-  assert.strictEqual(res.body.title, newBlog.title)
-  assert.strictEqual(res.body.author, newBlog.author)
-  assert.strictEqual(res.body.url, newBlog.url)
-  assert.strictEqual(res.body.likes, 0)
-})
+      // check content is correct
+      assert.strictEqual(res.body.title, newBlog.title)
+      assert.strictEqual(res.body.author, newBlog.author)
+      assert.strictEqual(res.body.url, newBlog.url)
+      assert.strictEqual(res.body.likes, 0)
+    })
 
-test('posting new blog with empty title returns 400 bad request', async () => {
-  let newBlog =
+    test(' with empty title returns 400 bad request', async () => {
+      let newBlog =
   {
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
   }
-  await api.post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
 
-  const blogListAfterAdding = await helper.blogsInDb()
-  assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
-})
+      const blogListAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+    })
 
-test('posting new blog with empty url returns 400 bad request', async () => {
-  let newBlog =
+    test(' with empty url returns 400 bad request', async () => {
+      let newBlog =
   {
     title: 'Type wars',
     author: 'Robert C. Martin',
     likes: 2,
   }
-  await api.post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
+      await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
 
-  const blogListAfterAdding = await helper.blogsInDb()
-  assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+      const blogListAfterAdding = await helper.blogsInDb()
+      assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+    })
+  })
 })
 
 after(async () => {
