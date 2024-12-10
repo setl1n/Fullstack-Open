@@ -133,13 +133,61 @@ describe('when there are blogs saved', () => {
     })
 
     test('with invalid id returns 400', async () => {
-      // id does not exist
+      // id has wrong format
       let idToDelete = 'invalid id'
       await api.delete(`/api/blogs/${idToDelete}`)
         .expect(400)
 
       const blogListAfterAdding = await helper.blogsInDb()
       assert.strictEqual(blogListAfterAdding.length, helper.initialBlogs.length)
+    })
+  })
+
+  describe('updating likes of a blog', () => {
+    test.only('with valid id updates in database', async () => {
+      let idToUpdate = '5a422a851b54a676234d17f7'
+      let updatedBlog =
+      {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 2
+      }
+      let res = await api.put(`/api/blogs/${idToUpdate}`)
+        .send(updatedBlog)
+        .expect(200)
+
+      assert.strictEqual(res.body.likes, 2)
+    })
+
+    test.only('that doesnt exists returns 404', async () => {
+      // id does not exist
+      let idToUpdate = '5a422a851b54a676234d17f8'
+      let updatedBlog =
+      {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 2
+      }
+      await api.put(`/api/blogs/${idToUpdate}`)
+        .send(updatedBlog)
+        .expect(404)
+    })
+
+    test.only('with invalid id returns 400', async () => {
+      // id has wrong format
+      let idToDelete = 'invalid id'
+      let updatedBlog =
+      {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 2
+      }
+      await api.put(`/api/blogs/${idToDelete}`)
+        .send(updatedBlog)
+        .expect(400)
     })
   })
 })
