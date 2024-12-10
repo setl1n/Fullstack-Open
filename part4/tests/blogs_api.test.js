@@ -144,7 +144,7 @@ describe('when there are blogs saved', () => {
   })
 
   describe('updating likes of a blog', () => {
-    test.only('with valid id updates in database', async () => {
+    test('with valid id updates in database', async () => {
       let idToUpdate = '5a422a851b54a676234d17f7'
       let updatedBlog =
       {
@@ -160,7 +160,7 @@ describe('when there are blogs saved', () => {
       assert.strictEqual(res.body.likes, 2)
     })
 
-    test.only('that doesnt exists returns 404', async () => {
+    test('that doesnt exists returns 404', async () => {
       // id does not exist
       let idToUpdate = '5a422a851b54a676234d17f8'
       let updatedBlog =
@@ -175,7 +175,7 @@ describe('when there are blogs saved', () => {
         .expect(404)
     })
 
-    test.only('with invalid id returns 400', async () => {
+    test('with invalid id returns 400', async () => {
       // id has wrong format
       let idToDelete = 'invalid id'
       let updatedBlog =
