@@ -86,7 +86,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error));
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     let newPersonJSON = req.body;
     if (!newPersonJSON.name || !newPersonJSON.number) {
         return res.status(400).send({ error: "missing name or number" });
@@ -97,16 +97,20 @@ app.post('/api/persons', (req, res) => {
     let name = newPersonJSON.name.toString();
     let number = newPersonJSON.number.toString();
     let newPersonToAdd = new Person({ name, number })
-    newPersonToAdd.save().then((savedPerson) => {
-        res.json(savedPerson);
-    });
+    newPersonToAdd.save()
+        .then((savedPerson) => {
+            res.json(savedPerson);
+        })
+        .catch(error => next(error));
 })
 
 const errorHandler = (err, req, res, next) => {
-    console.log(err);
+    console.log("error: ", JSON.stringify(err, null, 2));
 
     if (err.name == "CastError") {
         return res.status(400).send({ error: "malformatted id" });
+    } else if (err.name == "ValidationError") {
+        return res.status(400).send(err.message);
     } else {
         return res.status(500).send({ error: "something went wrong"});
     }
