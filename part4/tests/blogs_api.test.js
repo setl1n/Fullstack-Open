@@ -25,6 +25,14 @@ test('notes are returned as json', async () => {
   assert.equal(res.body.length, helper.initialBlogs.length)
 })
 
+test('unique identifier is id', async () => {
+  const res = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  assert.equal(res.body[0].id, helper.initialBlogs[0]._id)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
