@@ -57,6 +57,30 @@ test('posting a valid blog adds to database', async () => {
   assert.strictEqual(res.body.likes, newBlog.likes)
 })
 
+test('posting new blog without "likes" defaults "likes" to 0', async () => {
+  let newBlog =
+  {
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+  }
+
+  const res = await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  // check same length
+  const blogsAfterAdding = await helper.blogsInDb()
+  assert.strictEqual(blogsAfterAdding.length, helper.initialBlogs.length + 1)
+
+  // check content is correct
+  assert.strictEqual(res.body.title, newBlog.title)
+  assert.strictEqual(res.body.author, newBlog.author)
+  assert.strictEqual(res.body.url, newBlog.url)
+  assert.strictEqual(res.body.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
