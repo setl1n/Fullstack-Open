@@ -8,7 +8,7 @@ const Blog = ({ blog, likeBlog , deleteBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
