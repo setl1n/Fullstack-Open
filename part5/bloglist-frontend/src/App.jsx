@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import NewBlog from './components/NewBlog'
+import Togglable from './components/Togglable'
 import { ErrorNotification, SuccessNotification } from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,9 +12,6 @@ const App = () => {
   const [successNotification, setSuccessNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -63,17 +62,13 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateNewBlog = async (event) => {
+  const createNewBlog = async (newBlog) => {
     event.preventDefault()
     try {
-      let newBlog = { title: title, author: author, url: url }
-      console.log(newBlog)
+      console.log("new blog received on app:", newBlog)
       const retBlog = await (blogService.create(newBlog))
       console.log("retBlog: ", retBlog)
       setBlogs(blogs.concat(retBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       setSuccessNotification(`a new blog ${retBlog.name} by ${retBlog.author} added`)
       setTimeout(() => {
         setSuccessNotification(null)
@@ -83,6 +78,7 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+      throw new Error(error.message)
     }
   }
 
@@ -123,15 +119,10 @@ const App = () => {
       <div>{user.name} logged in
         <button type="button" onClick={handleLogout}>log out</button>
       </div>
+      <Togglable></Togglable>
 
       <br />
-      <h2>create new</h2>
-      <form onSubmit={handleCreateNewBlog}>
-        title: <input value={title} onChange={({ target }) => setTitle(target.value)} /><br />
-        author: <input value={author} onChange={({ target }) => setAuthor(target.value)} /><br />
-        url: <input value={url} onChange={({ target }) => setUrl(target.value)} /><br />
-        <button type="submit">create</button>
-      </form>
+      <NewBlog createNewBlog={createNewBlog}/>
       <br></br>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
