@@ -44,7 +44,7 @@ blogsRouter.put('/:id', async (request, response) => {
   if (!updatedBlog) {
     return response.status(404).send({ error: 'Blog not found' })
   }
-  response.send(updatedBlog)
+  response.send(await updatedBlog.populate('user'))
 })
 
 module.exports = blogsRouter

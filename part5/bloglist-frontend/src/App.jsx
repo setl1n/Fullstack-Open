@@ -64,7 +64,6 @@ const App = () => {
   }
 
   const createNewBlog = async (newBlog) => {
-    event.preventDefault()
     try {
       console.log("new blog received on app:", newBlog)
       const retBlog = await (blogService.create(newBlog))
@@ -77,6 +76,20 @@ const App = () => {
       }, 5000)
     } catch (error) {
       setErrorMessage('Could not create new blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      throw new Error(error.message)
+    }
+  }
+
+  const likeBlog = async (newlyLikedBlog) => {
+    try {
+      const retBlog = await (blogService.update(newlyLikedBlog))
+      console.log("newly liked returned: ", retBlog)
+      setBlogs(blogs.map((blog) => blog.id === newlyLikedBlog.id ? retBlog : blog))
+    } catch (error) {
+      setErrorMessage('Could not like blog')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -127,7 +140,7 @@ const App = () => {
       </Togglable>
       <br />
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog}/>
       )}
     </div>
   )
