@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     async function fetchBlogs() {
       let blogs = await blogService.getAll()
-      console.log("blogs received: ", blogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
+      console.log('blogs received: ', blogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
       setBlogs(blogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
     }
     fetchBlogs()
@@ -66,9 +66,9 @@ const App = () => {
 
   const createNewBlog = async (newBlog) => {
     try {
-      console.log("new blog received on app:", newBlog)
+      console.log('new blog received on app:', newBlog)
       const retBlog = await (blogService.create(newBlog))
-      console.log("retBlog: ", retBlog)
+      console.log('retBlog: ', retBlog)
       blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(retBlog))
       setSuccessNotification(`a new blog ${retBlog.name} by ${retBlog.author} added`)
@@ -87,7 +87,7 @@ const App = () => {
   const likeBlog = async (newlyLikedBlog) => {
     try {
       const retBlog = await (blogService.update(newlyLikedBlog))
-      console.log("newly liked returned: ", retBlog)
+      console.log('newly liked returned: ', retBlog)
       setBlogs(blogs.map((blog) => blog.id === newlyLikedBlog.id ? retBlog : blog).sort((blog1, blog2) => blog2.likes - blog1.likes))
     } catch (error) {
       setErrorMessage('Could not like blog')
