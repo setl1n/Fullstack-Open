@@ -15,11 +15,11 @@ const App = () => {
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
 
-  useEffect(async () => {
+  useEffect(() => {
     async function fetchBlogs() {
       let blogs = await blogService.getAll()
+      console.log("blogs received: ", blogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
       setBlogs(blogs.sort((blog1, blog2) => blog2.likes - blog1.likes))
-
     }
     fetchBlogs()
   }, [])
