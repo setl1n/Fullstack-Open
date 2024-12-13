@@ -71,7 +71,7 @@ const App = () => {
       console.log('retBlog: ', retBlog)
       blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(retBlog))
-      setSuccessNotification(`a new blog ${retBlog.name} by ${retBlog.author} added`)
+      setSuccessNotification(`a new blog ${retBlog.title} by ${retBlog.author} added`)
       setTimeout(() => {
         setSuccessNotification(null)
       }, 5000)
