@@ -50,13 +50,14 @@ describe('When logged in', () => {
 
     await expect(page.getByText('A blog about testing - by An amazing guy')).not.toBeVisible()
   })
-  test('only user who added blog can see delete button', async ({ page }) => {
-    // await loginWith(page, 'testUser', 'StrongPassword')
-    await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
-    await page.getByRole('button', {name: 'log out'}).click()
-    await loginWith(page, 'kayPohUser', 'KayPohPassword')
-    await page.getByRole('button', {name: 'view'}).click()
-  
-    await expect(page.getByRole('button', {name: 'delete'})).toBeHidden()
-  })
+})
+
+test('only user who added blog can see delete button', async ({ page }) => {
+  await loginWith(page, 'testUser', 'StrongPassword')
+  await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
+  await page.getByRole('button', {name: 'log out'}).click()
+  await loginWith(page, 'kayPohUser', 'KayPohPassword')
+  await page.getByRole('button', {name: 'view'}).click()
+
+  await expect(page.getByRole('button', {name: 'delete'})).toBeHidden()
 })
