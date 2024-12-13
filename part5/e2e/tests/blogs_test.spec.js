@@ -22,4 +22,11 @@ describe('When logged in', () => {
     await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
     await expect(page.getByText('A blog about testing - by An amazing guy')).toBeVisible()
   })
+
+  test('a new blog can be liked', async ({ page }) => {
+    await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
+    await page.getByRole('button', {name: 'view'}).click()
+    await page.getByRole('button', {name: 'like'}).click()
+    await expect(page.getByText('likes 1')).toBeVisible()
+  })
 })
