@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -22,16 +23,12 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username-field').fill('testUser')
-      await page.getByTestId('password-field').fill('StrongPassword')
-      await page.getByRole('button', {name: 'login'}).click()
+      await loginWith(page, 'testUser', 'StrongPassword')
       await expect(page.getByText('Mr Test logged in')).toBeVisible()
     })
 
     test('fails with wrong username', async ({ page }) => {
-      await page.getByTestId('username-field').fill('wrongUsername')
-      await page.getByTestId('password-field').fill('StrongPassword')
-      await page.getByRole('button', {name: 'login'}).click()
+      await loginWith(page, 'wrongUsername', 'StrongPassword')
       const errorDiv = await page.locator('.error')
       await expect(errorDiv).toContainText('Wrong credentials')
       await expect(errorDiv).toHaveCSS('border-style', 'solid')
@@ -39,9 +36,7 @@ describe('Blog app', () => {
     })
 
     test('fails with wrong password', async ({ page }) => {
-      await page.getByTestId('username-field').fill('testUser')
-      await page.getByTestId('password-field').fill('wrongPassword')
-      await page.getByRole('button', {name: 'login'}).click()
+      await loginWith(page, 'testUser', 'WrongPassword')
       const errorDiv = await page.locator('.error')
       await expect(errorDiv).toContainText('Wrong credentials')
       await expect(errorDiv).toHaveCSS('border-style', 'solid')

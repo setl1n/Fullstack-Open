@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith , createNewBlog } = require('./helper')
 
 beforeEach(async ({ page, request }) => {
   await request.post('/api/testing/reset')
@@ -14,17 +15,11 @@ beforeEach(async ({ page, request }) => {
 
 describe('When logged in', () => {
   beforeEach(async ({ page }) => {
-    await page.getByTestId('username-field').fill('testUser')
-    await page.getByTestId('password-field').fill('StrongPassword')
-    await page.getByRole('button', {name: 'login'}).click()
+    await loginWith(page, 'testUser', 'StrongPassword')
   })
 
   test('a new blog can be created', async ({ page }) => {
-    await page.getByRole('button', {name: 'new blog'}).click()
-    await page.getByPlaceholder('title of blog').fill('A blog about testing')
-    await page.getByPlaceholder('author').fill('An amazing guy')
-    await page.getByPlaceholder('link to blog').fill('google.com')
-    await page.getByRole('button', {name: 'create'}).click()
+    await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
     await expect(page.getByText('A blog about testing - by An amazing guy')).toBeVisible()
   })
 })
