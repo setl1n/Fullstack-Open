@@ -9,10 +9,14 @@ const Notification = () => {
   }
   return (
     <>
-      <div style={style}>
-        {notification}
-      </div>
-      <br/>
+    { notification && 
+      <>
+        <div style={style}>
+          {notification}
+        </div>
+        <br/> 
+      </>
+    }
     </>
   )
 }
