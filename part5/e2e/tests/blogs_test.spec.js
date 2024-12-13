@@ -29,4 +29,18 @@ describe('When logged in', () => {
     await page.getByRole('button', {name: 'like'}).click()
     await expect(page.getByText('likes 1')).toBeVisible()
   })
+
+  test('a new blog can be deleted', async ({ page }) => {
+    // have to add listener before trigger event for confirmation dialogs
+    page.on('dialog', async (dialog) => {
+      expect(dialog.type()).toBe('confirm'); // Ensure it's a confirmation dialog
+      expect(dialog.message()).toBe('Remove blog A blog about testing by An amazing guy ?'); // Check the dialog message
+      await dialog.accept(); // Simulate clicking "OK"
+    });
+    await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
+    await page.getByRole('button', {name: 'view'}).click()
+    await page.getByRole('button', {name: 'delete'}).click()
+
+    await expect(page.getByText('A blog about testing - by An amazing guy')).not.toBeVisible()
+  })
 })
