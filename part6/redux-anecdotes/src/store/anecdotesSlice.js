@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
 // code without abstraction
 // const anecdoteReducer = (state = initialState, action) => {
 //   switch (action.type) {
@@ -41,12 +39,7 @@ const anecdotesSlice = createSlice({
       return state.map((anecdote) => anecdote.id === action.payload ? {...anecdote, votes: anecdote.votes + 1} : anecdote).sort((anec1, anec2) => anec2.votes - anec1.votes)
     },
     createNewAnecdote(state, action) {
-      let newAnecdote = {
-            content: action.payload,
-            id: getId(),
-            votes: 0
-          }
-      state.push(newAnecdote)
+      state.push(action.payload)
     },
     setAnecdotes(state, action) {
       return action.payload
