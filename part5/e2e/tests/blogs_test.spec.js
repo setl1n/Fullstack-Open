@@ -50,6 +50,23 @@ describe('When logged in', () => {
 
     await expect(page.getByText('A blog about testing - by An amazing guy')).not.toBeVisible()
   })
+
+  test('blogs are ordered by likes', async ({ page }) => {
+    await createNewBlog(page, 'A blog about testing', 'An amazing guy', 'google.com' )
+    await createNewBlog(page, 'A second blog about testing', 'Another amazing guy', 'google.com' )
+    await createNewBlog(page, 'A third blog about testing', 'Last amazing guy', 'google.com' )
+    await page.getByText('A second blog about testing - by Another amazing guy').locator('..').getByRole('button', { name: 'view' }).click()
+    await page.getByText('A second blog about testing - by Another amazing guy').locator('..').locator('..').getByRole('button', { name: 'like' }).click()
+    await page.getByText('A second blog about testing - by Another amazing guy').locator('..').locator('..').getByRole('button', { name: 'like' }).click()
+    await page.getByText('A third blog about testing - by Last amazing guy').locator('..').getByRole('button', { name: 'view' }).click()
+    await page.getByText('A third blog about testing - by Last amazing guy').locator('..').locator('..').getByRole('button', { name: 'like' }).click()
+    await page.getByText('A third blog about testing - by Last amazing guy').locator('..').locator('..').getByRole('button', { name: 'like' }).click()
+    await page.getByText('A third blog about testing - by Last amazing guy').locator('..').locator('..').getByRole('button', { name: 'like' }).click()
+    await page.getByText('likes 3').waitFor()
+    const titles = await page.getByTestId('blog-title').allTextContents();
+    const expectedOrder = ['A third blog about testing - by Last amazing guy', 'A second blog about testing - by Another amazing guy', 'A blog about testing - by An amazing guy']
+    expect(titles).toEqual(expectedOrder);
+  })
 })
 
 test('only user who added blog can see delete button', async ({ page }) => {

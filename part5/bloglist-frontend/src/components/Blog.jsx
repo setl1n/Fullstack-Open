@@ -31,11 +31,15 @@ const Blog = ({ blog, likeBlog , deleteBlog }) => {
 
   return (
     <div style={blogStyle} >
-      <div>
-        {blog.title + ' - by '}
-        {blog.author}
-        <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
-        <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div data-testid="blog-title">
+          {blog.title + ' - by '}
+          {blog.author}
+        </div>
+        <div>
+          <button style={hideWhenVisible} onClick={toggleVisibility}>view</button>
+          <button style={showWhenVisible} onClick={toggleVisibility}>hide</button>
+        </div>
       </div>
       <div style={showWhenVisible} className="likesAndUrl">
         <br />
