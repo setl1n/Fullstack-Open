@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { vote } from '../store/anecdotesSlice'
+import { asyncVote } from '../store/anecdotesSlice'
 import { setNotification , clearNotification } from '../store/notificationSlice'
 
 
@@ -7,9 +7,14 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes.filter((anecdote) => anecdote.content.includes(state.filter)))
   const dispatch = useDispatch()
 
-  const voteId = (content, id) => {
-    dispatch(vote(id))
-    dispatch(setNotification(`you voted '${content}'`))
+  const voteForAnecdote = (anecdote) => {
+    let votedAnecdote = {
+      content : anecdote.content,
+      id : anecdote.id,
+      votes : anecdote.votes + 1
+    }
+    dispatch(asyncVote(votedAnecdote))
+    dispatch(setNotification(`you voted '${votedAnecdote.content}'`))
     setTimeout(() => dispatch(clearNotification()), 5000)
   }
 
@@ -22,7 +27,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => voteId(anecdote.content, anecdote.id)}>vote</button>
+            <button onClick={() => voteForAnecdote(anecdote)}>vote</button>
           </div>
         </div>
       )}

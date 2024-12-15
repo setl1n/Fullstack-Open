@@ -36,9 +36,6 @@ const anecdotesSlice = createSlice({
   name: 'filter',
   initialState: [],
   reducers: {
-    vote(state, action) {
-      return state.map((anecdote) => anecdote.id === action.payload ? {...anecdote, votes: anecdote.votes + 1} : anecdote).sort((anec1, anec2) => anec2.votes - anec1.votes)
-    },
     setAnecdotes(state, action) {
       return action.payload
     }
@@ -50,6 +47,9 @@ const anecdotesSlice = createSlice({
       })
       .addCase(createNewAnecdotesAsync.fulfilled, (state, action) => {
         state.push(action.payload)
+      })
+      .addCase(asyncVote.fulfilled, (state, action) => {
+        return state.map((anecdote) => anecdote.id === action.payload.id ? {...anecdote, votes: anecdote.votes + 1} : anecdote).sort((anec1, anec2) => anec2.votes - anec1.votes)
       })
   }
 })
@@ -65,6 +65,13 @@ export const createNewAnecdotesAsync = createAsyncThunk(
   'anecdotes/CreateNewAnecdotesAsync', 
   async ( newAnecdote ) => {
     return await anecdoteService.createNew(newAnecdote)
+  }
+)
+
+export const asyncVote = createAsyncThunk(
+  'anecdotes/AsyncVote', 
+  async ( votedAnecdote ) => {
+    return await anecdoteService.vote(votedAnecdote)
   }
 )
 
