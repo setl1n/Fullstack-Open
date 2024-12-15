@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import anecdoteService from "../services/anecdoteService";
 
 // code without abstraction
 // const anecdoteReducer = (state = initialState, action) => {
@@ -44,8 +45,21 @@ const anecdotesSlice = createSlice({
     setAnecdotes(state, action) {
       return action.payload
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(initializeAnecdotes.fulfilled, (state, action) => {
+        return action.payload
+      })
   }
 })
+
+export const initializeAnecdotes = createAsyncThunk(
+  'anecdotes/InitializeAnecdotesStatus', 
+  async () => {
+    return await anecdoteService.getAll()
+  }
+)
 
 export const { vote, createNewAnecdote , setAnecdotes } = anecdotesSlice.actions
 export default anecdotesSlice.reducer
