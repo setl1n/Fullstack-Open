@@ -39,9 +39,6 @@ const anecdotesSlice = createSlice({
     vote(state, action) {
       return state.map((anecdote) => anecdote.id === action.payload ? {...anecdote, votes: anecdote.votes + 1} : anecdote).sort((anec1, anec2) => anec2.votes - anec1.votes)
     },
-    createNewAnecdote(state, action) {
-      state.push(action.payload)
-    },
     setAnecdotes(state, action) {
       return action.payload
     }
@@ -51,6 +48,9 @@ const anecdotesSlice = createSlice({
       .addCase(initializeAnecdotes.fulfilled, (state, action) => {
         return action.payload
       })
+      .addCase(createNewAnecdotesAsync.fulfilled, (state, action) => {
+        state.push(action.payload)
+      })
   }
 })
 
@@ -58,6 +58,13 @@ export const initializeAnecdotes = createAsyncThunk(
   'anecdotes/InitializeAnecdotesStatus', 
   async () => {
     return await anecdoteService.getAll()
+  }
+)
+
+export const createNewAnecdotesAsync = createAsyncThunk(
+  'anecdotes/CreateNewAnecdotesAsync', 
+  async ( newAnecdote ) => {
+    return await anecdoteService.createNew(newAnecdote)
   }
 )
 

@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
-import { createNewAnecdote } from '../store/anecdotesSlice'
+import { createNewAnecdotesAsync } from '../store/anecdotesSlice'
 import { setNotification , clearNotification } from '../store/notificationSlice'
-import anecdoteService from '../services/anecdoteService'
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -16,8 +15,7 @@ const AnecdoteForm = () => {
             id: getId(),
             votes: 0
         }
-        const retAnecdote = await anecdoteService.createNew(newAnecdote)
-        dispatch(createNewAnecdote(retAnecdote))
+        dispatch(createNewAnecdotesAsync(newAnecdote))
         event.target.newAnecdote.value = ''
         dispatch(setNotification(`you created '${content}'`))
         setTimeout(() => dispatch(clearNotification()), 5000)
