@@ -46,7 +46,7 @@ const anecdotesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(initializeAnecdotes.fulfilled, (state, action) => {
-        return action.payload
+        return action.payload.sort((anec1, anec2) => anec2.votes - anec1.votes)
       })
       .addCase(createNewAnecdotesAsync.fulfilled, (state, action) => {
         state.push(action.payload)
