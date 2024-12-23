@@ -30,7 +30,6 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value
     newAnecdoteMutation.mutate({content, id: getId(), votes: 0})
     event.target.anecdote.value = ''
-    console.log('new anecdote')
 }
 
   return (
