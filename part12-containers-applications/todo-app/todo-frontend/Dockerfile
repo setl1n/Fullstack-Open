@@ -14,6 +14,8 @@ RUN npm ci
 
 RUN npm run build
 
+RUN npm run test
+
 # This is a new stage, everything before this is gone, except for the files that we want to COPY
 
 FROM nginx:1.25-alpine
