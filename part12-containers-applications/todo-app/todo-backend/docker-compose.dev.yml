@@ -1,4 +1,18 @@
 services:
+  server:
+    image: todo-backend-dev
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+    environment: 
+      - REDIS_URL=redis://todo-backend-redis-1:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+  debug-helper:
+    image: busybox
   mongo:
     image: mongo
     ports:
