@@ -8,9 +8,19 @@ const AnecdoteForm = () => {
   const queryClient = useQueryClient()
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch({type:"SET", payload: `anecdote "${data.content}" created`})
+      setTimeout(() => dispatch({type:"CLEAR"}), 5000)
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
     },
+    onError: (err, variables) => {
+      if (err.message === "Request failed with status code 400") {
+        dispatch({type:"SET", payload: `too short anecdote, must have length 5 or more`})
+      } else {
+        dispatch({type:"SET", payload: `err ${err.message}`})
+      }
+      setTimeout(() => dispatch({type:"CLEAR"}), 5000)
+    }
  })
   const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -19,8 +29,6 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     newAnecdoteMutation.mutate({content, id: getId(), votes: 0})
-    dispatch({type:"SET", payload: `anecdote "${content}" created`})
-    setTimeout(() => dispatch({type:"CLEAR"}), 5000)
     event.target.anecdote.value = ''
     console.log('new anecdote')
 }
