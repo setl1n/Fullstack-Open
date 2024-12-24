@@ -8,3 +8,13 @@ services:
       - ./backend/:/usr/src/app
     ports:
       - 3001:3001
+  frontend:
+    image: phonebook-frontend-dev
+    build:
+      context: ./frontend/
+      dockerfile: ./frontend/dev.Dockerfile
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 5173:5173
