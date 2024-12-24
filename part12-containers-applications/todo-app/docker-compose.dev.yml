@@ -4,10 +4,8 @@ services:
     build:
       context: ./todo-frontend/ # The context will pick this directory as the "build context"
       dockerfile: ./todo-frontend/dev.Dockerfile # This will simply tell which dockerfile to read
-    ports:
-      - 5173:5173
     environment:
-      VITE_BACKEND_URL: http://localhost:3000/
+      VITE_BACKEND_URL: http://localhost:8080/api/
     volumes: 
       - ./todo-frontend/:/usr/src/app/
     container_name: todo-frontend-dev
@@ -25,8 +23,6 @@ services:
     build:
       context: ./todo-backend/
       dockerfile: ./todo-backend/dev.Dockerfile
-    ports:
-      - 3000:3000
     volumes:
       - ./todo-backend/:/usr/src/app
     environment: 
