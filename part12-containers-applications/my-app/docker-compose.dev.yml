@@ -1,4 +1,14 @@
 services:
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: phonebook-nginx
+    depends_on:
+      - backend # wait for the frontend container to be started
+      - frontend
   backend:
     image: phonebook-backend-dev
     build:
@@ -6,8 +16,6 @@ services:
       dockerfile: ./backend/dev.Dockerfile
     volumes:
       - ./backend/:/usr/src/app
-    ports:
-      - 3001:3001
   frontend:
     image: phonebook-frontend-dev
     build:
@@ -16,5 +24,3 @@ services:
     volumes:
       - ./frontend/:/usr/src/app
       - /usr/src/app/node_modules
-    ports:
-      - 5173:5173
