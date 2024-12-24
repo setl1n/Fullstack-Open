@@ -1,0 +1,10 @@
+services:
+  backend:
+    image: phonebook-backend-dev
+    build:
+      context: ./backend/
+      dockerfile: ./backend/dev.Dockerfile
+    volumes:
+      - ./backend/:/usr/src/app
+    ports:
+      - 3001:3001
